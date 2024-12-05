@@ -1,0 +1,115 @@
+:root {
+  --Noto-Sans: "Noto Sans", Arial, Helvetica, sans-serif;
+  --League-Spartan: "League Spartan", Arial, Helvetica, sans-serif;
+  --white: rgb(243, 242, 238);
+  --lightgray: rgb(183, 183, 179);
+  --gray: rgb(99, 99, 97);
+  --bg-color: #1f1e23;
+  --infopx: 12px;
+}
+
+body {
+  background-color: var(--bg-color);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  h1 {
+    width: 180px;
+    margin: 30px 0 25px 0;
+    font-size: 36px;
+    font-family: var(--League-Spartan);
+    font-weight: 400;
+    letter-spacing: 2px;
+    color: var(--white);
+    text-align: center;
+  }
+}
+
+.info {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.updated,
+.words,
+.letters,
+.pages {
+  margin: 5px 0;
+  font-size: var(--infopx);
+  font-family: var(--Noto-Sans);
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: var(--lightgray);
+  text-align: center;
+}
+
+span {
+  background-color: var(--white);
+  margin: 10px 0;
+  width: 90%;
+  height: 2px;
+  border-radius: 2px;
+}
+
+.entry {
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  padding: 12px;
+  background-color: #121317;
+  border-radius: 15px;
+}
+
+.title {
+  margin: 0;
+  color: var(--white);
+  font-size: 16px;
+  font-family: var(--Noto-Sans);
+  font-weight: 400;
+}
+
+.footer {
+  margin-top: 10px;
+  height: 18px;
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
+}
+
+.date {
+  margin-right: auto;
+  color: var(--gray);
+  font-size: var(--infopx);
+  font-family: var(--Noto-Sans);
+  font-weight: 400;
+}
+
+.starred {
+  width: 18px;
+  height: 18px;
+  margin-right: 5px;
+}
+
+.star {
+  fill: transparent;
+}
+
+.id {
+  margin: 0;
+  color: var(--gray);
+  font-size: var(--infopx);
+  font-family: var(--Noto-Sans);
+  font-weight: 400;
+}
