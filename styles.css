@@ -63,7 +63,7 @@ label {
   font-family: var(--Noto-Sans);
   font-weight: 400;
   letter-spacing: 1px;
-  color: var(--white);
+  color: var(--lightgray);
   text-align: center;
   input {
     width: 18px;
