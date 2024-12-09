@@ -22,7 +22,6 @@ header {
   align-items: center;
   width: 100%;
   h1 {
-    width: 180px;
     margin: 30px 0 25px 0;
     font-size: 36px;
     font-family: var(--League-Spartan);
@@ -52,6 +51,24 @@ header {
   letter-spacing: 1px;
   color: var(--lightgray);
   text-align: center;
+}
+
+label {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 5px 0;
+  font-size: var(--infopx);
+  font-family: var(--Noto-Sans);
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: var(--white);
+  text-align: center;
+  input {
+    width: 18px;
+    height: 18px;
+  }
 }
 
 span {
