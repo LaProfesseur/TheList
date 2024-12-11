@@ -27,7 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return rows;
   }
 
-  // CSV laden und rendern
   function loadAndRenderCSV() {
     fetch("output.csv")
       .then((response) => {
@@ -44,93 +43,99 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  // CSV parsen und HTML generieren
   function parseCSVAndRender(csvContent) {
-    const rows = parseCSV(csvContent); // Verwende die neue Funktion
-    const headers = rows.shift(); // Header extrahieren
+    const rows = parseCSV(csvContent);
+    const headers = rows.shift();
 
     const titleIndex = headers.indexOf("title");
     const starredIndex = headers.indexOf("starred");
     const dateIndex = headers.indexOf("date");
     const idIndex = headers.indexOf("id");
     const infoIndex = headers.indexOf("info");
+    const typeIndex = headers.indexOf("type");
 
     if (
       titleIndex === -1 ||
       starredIndex === -1 ||
       dateIndex === -1 ||
       idIndex === -1 ||
-      infoIndex === -1
+      infoIndex === -1 ||
+      typeIndex === -1
     ) {
       console.error(
-        "Header `title`, `starred`, `date`, `id` oder `info` nicht gefunden!"
+        "Header `title`, `starred`, `date`, `id`, `info` oder `type` nicht gefunden!"
       );
       return;
     }
 
-    let filteredRows = [...rows];
-
-    // Filter und Sortierfunktionen
-    const filterByStarred = document.getElementById("starredCheckbox").checked;
-    const invertSort = document.getElementById("invertSortCheckbox").checked;
-
-    if (filterByStarred) {
-      filteredRows = filteredRows.filter((row) => row[starredIndex] == 1);
-    }
-
-    if (invertSort) {
-      filteredRows.sort((a, b) => b[idIndex] - a[idIndex]);
-    } else {
-      filteredRows.sort((a, b) => a[idIndex] - b[idIndex]);
-    }
-
     const output = document.getElementById("output");
-    output.innerHTML = ""; // Vorherige Einträge löschen
+    output.innerHTML = "";
     const template = document.getElementById("template").children[0];
 
-    // Zähler für Wörter und Buchstaben
     let totalWords = 0;
     let totalLetters = 0;
 
-    filteredRows.forEach((row) => {
+    rows.forEach((row) => {
       if (row.length < headers.length) {
         console.warn("Zeile übersprungen, unvollständig:", row);
         return;
       }
 
+      if (row[infoIndex] == 1) {
+        const updatedDate = row[dateIndex];
+        const updatedElement = document.querySelector("h2.updated");
+        updatedElement.textContent = `Last Updated: ${updatedDate}`;
+        return;
+      }
+
       const clone = template.cloneNode(true);
 
-      // Wenn info == 0, rendern wir das Template
       if (row[infoIndex] == 0) {
-        // Setze den Titel, die ID und das Datum
         clone.querySelector(".title").textContent = row[titleIndex];
         clone.querySelector(".id").textContent = row[idIndex];
-        clone.querySelector(".date").textContent = row[dateIndex]; // Setze das Datum
+        clone.querySelector(".date").textContent = row[dateIndex];
 
-        // Zähle Wörter und Buchstaben im Titel
         const titleText = row[titleIndex];
         const wordsInTitle = titleText.trim().split(/\s+/).length;
         const lettersInTitle = titleText.replace(/\s+/g, "").length;
 
-        // Füge zu den globalen Werten hinzu
         totalWords += wordsInTitle;
         totalLetters += lettersInTitle;
 
-        // Behandle die 'starred' Logik
         const starredDiv = clone.querySelector(".starred");
-        const svg = starredDiv.querySelector("svg path"); // SVG-Pfad finden
+        const svg = starredDiv.querySelector("svg path");
 
         if (row[starredIndex] == 1) {
-          svg.setAttribute("fill", "rgb(146, 193, 255)"); // Setze den Fill auf rgb(146, 193, 255)
+          svg.setAttribute("fill", "rgb(146, 193, 255)");
         } else if (row[starredIndex] == 0) {
-          svg.removeAttribute("fill"); // Entferne den Fill, wenn es 0 ist
+          svg.removeAttribute("fill");
+        }
+
+        const typeValue = parseInt(row[typeIndex], 10) || 0;
+        const typeElement = clone.querySelector(".type");
+
+        switch (typeValue) {
+          case 1:
+            typeElement.textContent = "// Gehässig";
+            typeElement.style.color = "lightcoral";
+            break;
+          case 2:
+            typeElement.textContent = "// Verzweifelt";
+            typeElement.style.color = "lightskyblue";
+            break;
+          case 3:
+            typeElement.textContent = "// Utopisch";
+            typeElement.style.color = "rgb(150, 224, 176)";
+            break;
+          default:
+            typeElement.textContent = "";
+            typeElement.style.color = "";
         }
 
         output.appendChild(clone);
       }
     });
 
-    // Update der globalen Zähler
     const wordsElement = document.querySelector(".words");
     const lettersElement = document.querySelector(".letters");
     const pagesElement = document.querySelector(".pages");
@@ -138,15 +143,11 @@ document.addEventListener("DOMContentLoaded", () => {
     wordsElement.textContent = `Words: ${totalWords}`;
     lettersElement.textContent = `Letters: ${totalLetters}`;
 
-    // Berechnung der Seitenzahl (250 Wörter pro Seite)
     const wordsPerPage = 250;
     const totalPages = Math.ceil(totalWords / wordsPerPage);
-
-    // Ausgabe in das Pages-Element
     pagesElement.textContent = `Pages: ${totalPages}`;
   }
 
-  // Event-Listener für die Checkboxen
   document
     .getElementById("starredCheckbox")
     .addEventListener("change", loadAndRenderCSV);

@@ -113,6 +113,13 @@ span {
   font-weight: 400;
 }
 
+.type {
+  margin-right: auto;
+  font-size: var(--infopx);
+  font-family: var(--Noto-Sans);
+  font-weight: 400;
+}
+
 .starred {
   width: 18px;
   height: 18px;
