@@ -28,6 +28,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function loadAndRenderCSV() {
+    const isStarredChecked = document.getElementById("starredCheckbox").checked;
+    const isInvertSortChecked =
+      document.getElementById("invertSortCheckbox").checked;
+
     fetch("output.csv")
       .then((response) => {
         if (!response.ok) {
@@ -36,14 +40,14 @@ document.addEventListener("DOMContentLoaded", () => {
         return response.text();
       })
       .then((csvContent) => {
-        parseCSVAndRender(csvContent);
+        parseCSVAndRender(csvContent, isStarredChecked, isInvertSortChecked);
       })
       .catch((error) => {
         console.error("Fehler beim Laden der CSV-Datei:", error);
       });
   }
 
-  function parseCSVAndRender(csvContent) {
+  function parseCSVAndRender(csvContent, filterStarred, invertSort) {
     const rows = parseCSV(csvContent);
     const headers = rows.shift();
 
@@ -75,12 +79,17 @@ document.addEventListener("DOMContentLoaded", () => {
     let totalWords = 0;
     let totalLetters = 0;
 
-    rows.forEach((row) => {
-      if (row.length < headers.length) {
-        console.warn("Zeile übersprungen, unvollständig:", row);
-        return;
-      }
+    let filteredRows = rows.filter((row) => row.length >= headers.length);
 
+    if (filterStarred) {
+      filteredRows = filteredRows.filter((row) => row[starredIndex] == 1);
+    }
+
+    if (invertSort) {
+      filteredRows.reverse();
+    }
+
+    filteredRows.forEach((row) => {
       if (row[infoIndex] == 1) {
         const updatedDate = row[dateIndex];
         const updatedElement = document.querySelector("h2.updated");
@@ -126,6 +135,10 @@ document.addEventListener("DOMContentLoaded", () => {
           case 3:
             typeElement.textContent = "// Utopisch";
             typeElement.style.color = "rgb(150, 224, 176)";
+            break;
+          case 4:
+            typeElement.textContent = "// Veraltet";
+            typeElement.style.color = "rgb(183, 183, 179)";
             break;
           default:
             typeElement.textContent = "";
